@@ -20,55 +20,58 @@
       throws(block, [expected], [message])
   */
 
-  module('jQuery#awesome', {
-    // This will run before each test in this module.
-    setup: function() {
-      this.elems = $('#qunit-fixture').children();
-    }
-  });
-
-  test('is chainable', function() {
-    expect(1);
-    // Not a bad test to run on collection methods.
-    strictEqual(this.elems.awesome(), this.elems, 'should be chainable');
-  });
-
-  test('is awesome', function() {
-    expect(1);
-    strictEqual(this.elems.awesome().text(), 'awesome0awesome1awesome2', 'should be awesome');
-  });
-
-  module('jQuery.awesome');
-
-  test('is awesome', function() {
-    expect(2);
-    strictEqual($.awesome(), 'awesome.', 'should be awesome');
-    strictEqual($.awesome({punctuation: '!'}), 'awesome!', 'should be thoroughly awesome');
-  });
-  
-  module(':awesome selector', {
-    // This will run before each test in this module.
-    setup: function() {
-      this.elems = $('#qunit-fixture').children();
-    }
-  });
-
-  test('is awesome', function() {
-    expect(1);
-    // Use deepEqual & .get() when comparing jQuery objects.
-    deepEqual(this.elems.filter(':awesome').get(), this.elems.last().get(), 'knows awesome when it sees it');
-  });
-
  module('jQuery#loadStates', {
     // This will run before each test in this module.
     setup: function() {
       this.elems = $('#qunit-fixture').children();
-    }
-  });
+		}
+	});
 
-  test('is Chainable', function() {
-	expect(1);
-	strictEqual(this.elems.loadStates(), this.elems, 'should be chainable');
-  });
+	test('is chainable', function() {
+	  expect(1);
+	  strictEqual(this.elems.loadStates(), this.elems, 'should be chainable');
+	});	  
+ }
+  
+  module('jQuery#loadStates.US', function() {
+	  test('is selected', function() {
+		expect(1);
+		strictEqual(this.selectStates.loadStates({currentState: 'WA'}).children(':selected').text(), 'Washington', 'should be selected');
+	  });
+	  
+	  asyncTest('', function() {
+		expect(1);
+		$.getJSON('../json/US.json', function(data) {
+			deepEqual(data['WA'], 'Washington', 'should be one of states');
+			start();
+		});
+	  });
+	  
+	  test('is all US states', function() {
+		expect(1);
+		strictEqual(this.selectStates.loadStates().children('option').length, 50, 'should be 50 states');
+	  });
+ 
+ });
+ 
+  module('jQuery#loadStates.CA', function() {
+  	  test('is selected', function() {
+		expect(1);
+		strictEqual(this.selectStates.loadStates({currentState: 'BC'}).children(':selected').text(), 'British Columbia', 'should be selected');
+	  });
+
+	asyncTest('', function() {
+		expect(1);
+		$.getJSON('../json/CA.json', function(data) {
+			deepEqual(data['BC'], 'British Columbia', 'should be one of provinces');
+			start();
+		});
+	});
+  
+    test('is all Canadian provinces and territories', function() {
+		expect(1);
+		strictEqual(this.selectStates.loadStates().children('option').length, 13, 'should be 10 provinces and 3 territories');
+	});
+  }
 
 }(jQuery));
